@@ -1,5 +1,5 @@
 export default {
-  logo: 'UNI-ADMIN',
+  logo: 'LMQ-ADMIN',
   navBar: {
     active: '0',
     list: [{
@@ -11,6 +11,10 @@ export default {
             pathname: "index"
           },
           {
+            icon: "el-icon-picture",
+            name: "相册管理",
+            pathname: "image"
+          }, {
             icon: "el-icon-s-claim",
             name: "商品列表",
             pathname: "shop_goods_list"

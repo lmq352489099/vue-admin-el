@@ -54,7 +54,10 @@
           </el-menu>
         </el-aside>
         <!-- 主页 -->
-        <el-main class="bg-light">
+        <el-main
+          class="bg-light"
+          style="padding-bottom:60px;position:relative;"
+        >
           <!-- 面包屑导航 -->
           <div
             class="border-bottom mb-3 bg-white"
@@ -111,6 +114,8 @@ export default {
     }
   },
   created() {
+    console.log("onCreated");
+    
     // 初始化菜单
     this.navBar = this.$conf.navBar;
     // 面包屑
@@ -186,6 +191,14 @@ export default {
     // 点击顶部 获取计算属性的index,来显示不同的菜单
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
+      if (key === '100-1') {
+        return console.log("修改资料");
+
+      }
+      if (key === '100-2') {
+        return console.log("退出登录");
+
+      }
       this.navBar.active = key
       console.log(this.slideMenus[this.slideMenusActive].pathname);
 
@@ -193,6 +206,10 @@ export default {
 
       //  默认选中跳转到当前激活
       this.slideMenusActive = "0"
+ 
+      
+      console.log(this.slideMenus.length );
+      
       if (this.slideMenus.length > 0) {
 
         this.$router.push({ name: this.slideMenus[this.slideMenusActive].pathname }).catch((e) => {
@@ -204,6 +221,7 @@ export default {
       }
       // 默认选择跳转到当前激活
     },
+
     // 点击侧边
     slideSelect(key, keyPath) {
       console.log(key, keyPath);
