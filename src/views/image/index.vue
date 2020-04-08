@@ -24,6 +24,20 @@
           <el-button type="primary" size="mini">搜索</el-button>
         </div>
         <div>
+          <el-button
+            type="warning"
+            size="mini"
+            @click="unChoose"
+            v-if="chooseList.length"
+            >取消选中</el-button
+          >
+          <el-button
+            type="danger"
+            size="mini"
+            @click="imageDel({ all: true })"
+            v-if="chooseList.length"
+            >批量删除</el-button
+          >
           <el-button type="success" size="mini" @click="openAlbumModel(false)"
             >创建相册</el-button
           >
@@ -76,7 +90,7 @@
                   <div
                     class="border "
                     :class="{ 'border-danger': item.ischeck }"
-                  >
+                   >
                     <span
                       Style="position:absolute;right:0;top:0"
                       v-if="item.ischeck"
@@ -124,7 +138,7 @@
                           icon="el-icon-delete"
                           size="mini"
                           class="p-2"
-                          @click="imageDel(index)"
+                          @click="imageDel({ index })"
                         ></el-button>
                       </el-button-group>
                     </div>
@@ -135,7 +149,30 @@
           </el-main>
         </el-container>
       </el-container>
-      <el-footer>Footer</el-footer>
+      <el-footer class="border-top d-flex align-items-center p-0">
+        <!-- 底部 -->
+        <div
+          style="width:200px;flex-shrink:0"
+          class="h-100 d-flex align-items-center justify-content-center border-right"
+        >
+          <el-button-group>
+            <el-button size="mini">上一页 </el-button>
+            <el-button size="mini"> 下一页 </el-button>
+          </el-button-group>
+        </div>
+        <div class="px-2">
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-sizes="[100, 200, 300, 400]"
+            :page-size="100"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="400"
+          >
+          </el-pagination>
+        </div>
+      </el-footer>
     </el-container>
     <!-- 修改 | 创建相册 -->
     <el-dialog :title="albumModelTitle" :visible.sync="albumModel">
@@ -213,7 +250,8 @@ export default {
       previewModel: false,
       imagesList: [],
       // 选中的数组
-      chooseList: []
+      chooseList: [],
+      currentPage: 1
     }
   },
   created() {
@@ -257,7 +295,7 @@ export default {
           if (no > -1) {
             console.log(no);
             console.log(this.imagesList[no].checkOrder);
-            
+
             console.log(--this.imagesList[no].checkOrder);
 
             //  --this.imagesList[no].checkOrder
@@ -290,7 +328,7 @@ export default {
         this.imagesList.push({
           id: i,
           url: "http://pic33.nipic.com/20131007/13639685_123501617185_2.jpg",
-          name: "图片",
+          name: "图片" + i,
           ischeck: false,
           checkOrder: 0
         }
@@ -403,15 +441,28 @@ export default {
 
     },
     // 删除图片
-    imageDel(index) {
+    imageDel(obj) {
 
 
-      this.$confirm("是否删除该图片?", "提示", {
+      this.$confirm(obj.all ? "是否删除选中图片?" : "是否删除该图片?", "提示", {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.imagesList.splice(index, 1)
+        if (obj.all) {
+          let list = this.imagesList.filter(img => {
+            return !this.chooseList.some(c => {
+              return c.id == img.id
+            })
+          })
+          console.log(list);
+          this.imagesList = list
+          this.chooseList = []
+
+        } else {
+          this.imagesList.splice(obj.index, 1)
+        }
+
         this.$message({
           type: "success",
           message: "删除成功!"
@@ -422,9 +473,42 @@ export default {
           message: '已取消删除'
         });
       });
+    },
+    // 批量删除
+    imageDelAll() {
 
+
+    },
+    // 取消选中
+    unChoose() {
+      console.log(1122);
+
+      this.imagesList.forEach(img => {
+        // 找到选中的图片
+        let i = this.chooseList.findIndex(item => {
+          return item.id == img.id
+        })
+        if (i > -1) {
+          // 取消选中样式,选中排序归零
+          img.ischeck = false
+          img.checkOrder = 0
+          // 从 cheooseList中移除
+          this.chooseList.splice(i, 1)
+        }
+
+      })
+      //  找到所有选中的图片
+      // 取消选中的样式  选中排序归0
+      // 从chooseList 中移除
+    },
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
     }
   },
+
 }
 </script>
 

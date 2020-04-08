@@ -4,7 +4,17 @@
  * 二、例如：shop/list，默认生成name为shop_list（如果结尾为index，例如shop/index则是shop）
  * 三、填写后不会自动生成
  * **/
-let routes = [{
+let routes = [
+
+  {
+    // path:'/login',
+    // name:'login',
+    // component:()=>import('../../views/login/index.vue')
+    meta: { title: "demo页" },
+    component: 'demo/index'
+  },
+
+  {
     path: '/',
     name: 'layout',
     redirect: { name: 'index' },
@@ -22,6 +32,10 @@ let routes = [{
         // path:'/shop/goods/list',
         meta: { title: "商品列表" },
         component: 'shop/goods/list'
+      },
+      {
+        meta: { title: "创建商品" },
+        component: 'shop/goods/create'
       },
       {
         meta: { title: "相册管理" },

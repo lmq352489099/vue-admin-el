@@ -27,7 +27,7 @@ export default {
 ::-webkit-scrollbar  
 {  
     width: 10px;  
-    height: 110px;  
+    height: 10px;  
     background-color: #F5F5F5;  
 }  
 /*定义滚动条轨道 内阴影+圆角*/  
